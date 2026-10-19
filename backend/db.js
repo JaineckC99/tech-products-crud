@@ -1,9 +1,9 @@
 require('dotenv').config();
-const Database = require('better-sqlite3');
+const { DatabaseSync } = require('node:sqlite');
 const fs = require('fs');
 const path = require('path');
 
-const db = new Database(process.env.DB_FILE || './products.db');
+const db = new DatabaseSync(process.env.DB_FILE || './products.db');
 
 const exists = db
   .prepare("SELECT name FROM sqlite_master WHERE type='table' AND name='products'")
