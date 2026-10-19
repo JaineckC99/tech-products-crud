@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Volta · Tech Product Showcase</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='16' fill='%238b5cf6'/><path d='M14 18h10l8 18 8-18h10L32 50z' fill='white'/></svg>">
+  <style>
+    :root {
+      --bg:#07060d; --panel:rgba(20,16,38,.72); --field:#0d0a1b; --line:rgba(139,92,246,.24);
+      --ink:#ece9ff; --muted:#9a93c2; --cyan:#22d3ee; --violet:#8b5cf6; --pink:#ec4899;
+      --danger:#fb7185; --ok:#34d399;
+      --grad:linear-gradient(135deg,#22d3ee,#8b5cf6 55%,#ec4899);
+    }
+    * { box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+    body { margin:0; font-family:'Segoe UI', system-ui, Arial, sans-serif; color:var(--ink); color-scheme:dark;
+      background:radial-gradient(900px 500px at 85% -10%, rgba(139,92,246,.2), transparent),
+                 radial-gradient(700px 500px at -10% 110%, rgba(34,211,238,.13), transparent), var(--bg);
+      background-attachment:fixed; }
+    .hidden { display:none !important; }
+    .logo-svg { display:block; }
+    .gtext { background:var(--grad); -webkit-background-clip:text; background-clip:text; color:transparent; }
+
+    /* ================= LOGIN ================= */
+    .login { position:relative; min-height:100vh; display:grid; place-items:center; padding:24px; overflow:hidden; background:#05040a; }
+    .login::before { content:""; position:absolute; inset:0; z-index:1; pointer-events:none;
+      background-image:linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px);
+      background-size:48px 48px;
+      -webkit-mask-image:radial-gradient(circle, #000 15%, transparent 72%); mask-image:radial-gradient(circle, #000 15%, transparent 72%); }
+    .aurora { position:absolute; border-radius:50%; filter:blur(90px); opacity:.55; animation:drift 14s ease-in-out infinite; }
+    .aurora.a { width:480px; height:480px; background:#7c3aed; top:-140px; left:-120px; }
+    .aurora.b { width:420px; height:420px; background:#0891b2; bottom:-140px; right:-100px; animation-delay:-5s; }
+    .aurora.c { width:300px; height:300px; background:#db2777; top:45%; left:58%; opacity:.28; animation-delay:-9s; }
+    @keyframes drift { 50% { transform:translate(40px,-30px) scale(1.1); } }
+    .float { position:absolute; z-index:1; font-size:34px; opacity:.17; animation:bob 9s ease-in-out infinite; user-select:none; }
+    @keyframes bob { 50% { transform:translateY(-24px) rotate(8deg); } }
+
+    .login-card { position:relative; z-index:2; width:100%; max-width:410px; padding:36px 34px 26px; border-radius:26px; text-align:center;
+      background:rgba(16,12,32,.68); backdrop-filter:blur(22px); -webkit-backdrop-filter:blur(22px);
+      border:1px solid var(--line); box-shadow:0 30px 80px rgba(0,0,0,.6), 0 0 70px rgba(139,92,246,.2); }
+    .login-card::before { content:""; position:absolute; left:12%; right:12%; top:0; height:2px; background:var(--grad); border-radius:2px; }
+    .emblem .logo-svg { width:128px; height:128px; margin:0 auto; animation:glow 4s ease-in-out infinite; }
+    @keyframes glow { 0%,100% { filter:drop-shadow(0 0 14px rgba(34,211,238,.55)); } 50% { filter:drop-shadow(0 0 28px rgba(236,72,153,.7)); } }
+    .wordmark { margin:6px 0 2px; font-size:40px; font-weight:800; letter-spacing:9px; text-indent:9px; }
+    .tagline { margin:0 0 26px; font-size:11px; letter-spacing:3.5px; color:var(--muted); }
+    .field { position:relative; margin-bottom:14px; text-align:left; }
+    .field .fi { position:absolute; left:15px; top:50%; transform:translateY(-50%); font-size:15px; opacity:.85; pointer-events:none; }
+    .field input { padding-left:46px; }
+    .field.pw input { padding-right:46px; }
+    .eye { position:absolute; right:8px; top:50%; transform:translateY(-50%); background:none; border:0; color:var(--muted); cursor:pointer; font-size:17px; padding:6px; }
+    .error { color:var(--danger); min-height:20px; font-size:13px; margin:-4px 0 8px; }
+    .hint { margin-top:16px; font-size:12px; color:var(--muted); }
+    .hint b { color:var(--cyan); }
+    .uni { margin-top:18px; font-size:10px; letter-spacing:1.8px; color:#6d6796; }
+
+    /* ================= SHARED ================= */
+    input, textarea, select { width:100%; padding:12px 14px; border:1px solid var(--line); border-radius:12px; font-size:14px;
+      font-family:inherit; background:var(--field); color:var(--ink); outline:none; transition:.2s; }
+    input::placeholder, textarea::placeholder { color:#5f5a86; }
+    input:focus, textarea:focus, select:focus { border-color:var(--violet); box-shadow:0 0 0 3px rgba(139,92,246,.25); }
+    option { background:#150f2a; color:var(--ink); }
+    textarea { resize:vertical; min-height:72px; }
+    .btn { width:100%; padding:13px; border:0; border-radius:12px; font-size:15px; font-weight:700; cursor:pointer; transition:.2s; }
+    .btn.primary { color:#fff; background:var(--grad); box-shadow:0 8px 28px rgba(139,92,246,.4); letter-spacing:.5px; }
+    .btn.primary:hover { transform:translateY(-2px); filter:brightness(1.1); box-shadow:0 12px 34px rgba(236,72,153,.35); }
+    .btn.ghost { background:transparent; color:var(--muted); border:1px solid var(--line); }
+    .btn.ghost:hover { color:var(--ink); border-color:var(--violet); }
+
+    /* ================= DASHBOARD ================= */
+    .shell { min-height:100vh; display:grid; grid-template-columns:250px 1fr; }
+    .sidebar { position:sticky; top:0; height:100vh; display:flex; flex-direction:column; padding:22px 16px;
+      background:linear-gradient(180deg, rgba(20,14,40,.96), rgba(8,6,16,.96)); border-right:1px solid var(--line); }
+    .side-brand { display:flex; align-items:center; gap:12px; padding:4px 8px 22px; margin-bottom:18px; border-bottom:1px solid var(--line); }
+    .side-brand .logo-svg { width:50px; height:50px; filter:drop-shadow(0 0 10px rgba(139,92,246,.65)); }
+    .side-brand b { display:block; font-size:21px; letter-spacing:5px; }
+    .side-brand small { font-size:10px; letter-spacing:1.6px; color:var(--muted); text-transform:uppercase; }
+    nav a { display:block; padding:12px 14px; margin-bottom:6px; border-radius:12px; color:var(--muted); text-decoration:none; font-size:14px; font-weight:600; transition:.2s; }
+    nav a:hover, nav a.active { color:var(--ink); background:rgba(139,92,246,.16); }
+    nav a.active { box-shadow:inset 3px 0 0 var(--violet); }
+    .side-foot { margin-top:auto; display:grid; gap:12px; }
+    .me { display:flex; align-items:center; gap:10px; padding:10px; border-radius:14px; background:rgba(255,255,255,.04); border:1px solid var(--line); }
+    .avatar { width:38px; height:38px; border-radius:50%; display:grid; place-items:center; font-weight:800; background:var(--grad); color:#fff; }
+    .me b { display:block; font-size:14px; } .me small { color:var(--muted); font-size:11px; }
+    .logout { padding:10px; border-radius:12px; cursor:pointer; background:transparent; color:var(--ink); border:1px solid var(--line); font-weight:600; }
+    .logout:hover { border-color:var(--danger); color:var(--danger); }
+
+    .content { padding:28px 30px 10px; min-width:0; }
+    .page-head { display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:10px; margin-bottom:22px; }
+    .page-head h2 { margin:0; font-size:28px; }
+    .page-head p { margin:4px 0 0; color:var(--muted); font-size:14px; }
+    .live { font-size:12px; padding:7px 14px; border-radius:30px; background:rgba(52,211,153,.1); border:1px solid rgba(52,211,153,.3); color:#6ee7b7; }
+    .live.off { background:rgba(251,113,133,.1); border-color:rgba(251,113,133,.3); color:#fda4af; }
+
+    .stats { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-bottom:22px; }
+    .stat { position:relative; overflow:hidden; display:flex; align-items:center; gap:16px; padding:20px; border-radius:18px;
+      background:var(--panel); border:1px solid var(--line); backdrop-filter:blur(12px); }
+    .stat::before { content:""; position:absolute; right:-34px; top:-34px; width:120px; height:120px; border-radius:50%; background:var(--grad); opacity:.15; filter:blur(8px); }
+    .ico { width:56px; height:56px; border-radius:16px; display:grid; place-items:center; font-size:26px; background:var(--grad); box-shadow:0 8px 24px rgba(139,92,246,.4); }
+    .stat:nth-child(2) .ico { background:linear-gradient(135deg,#fbbf24,#f97316); box-shadow:0 8px 24px rgba(249,115,22,.35); }
+    .stat:nth-child(3) .ico { background:linear-gradient(135deg,#34d399,#06b6d4); box-shadow:0 8px 24px rgba(6,182,212,.35); }
+    .stat span { color:var(--muted); font-size:12px; text-transform:uppercase; letter-spacing:.7px; }
+    .stat b { display:block; font-size:28px; margin-top:4px; }
+
+    .layout { display:grid; grid-template-columns:340px 1fr; gap:20px; align-items:start; }
+    .card { scroll-margin-top:20px; background:var(--panel); backdrop-filter:blur(12px); border:1px solid var(--line); border-radius:18px; padding:22px; box-shadow:0 14px 40px rgba(0,0,0,.35); }
+    .card h3 { margin:0 0 16px; font-size:17px; display:flex; align-items:center; gap:10px; }
+    .card h3::before { content:""; width:5px; height:20px; border-radius:4px; background:var(--grad); }
+    form { display:grid; gap:10px; }
+    label { font-size:12px; font-weight:600; color:var(--muted); margin-bottom:-4px; }
+
+    .toolbar { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:12px; }
+    .toolbar input { flex:1; min-width:170px; } .toolbar select { width:auto; min-width:160px; }
+    .count { color:var(--muted); font-size:13px; margin-bottom:10px; }
+    .wrap { overflow-x:auto; border-radius:14px; border:1px solid var(--line); }
+    table { width:100%; border-collapse:collapse; font-size:14px; }
+    th { text-align:left; padding:13px 12px; background:rgba(139,92,246,.12); color:#c4b5fd; font-size:11px; text-transform:uppercase; letter-spacing:.9px; white-space:nowrap; }
+    td { padding:12px; border-top:1px solid var(--line); vertical-align:middle; }
+    tbody tr:hover td { background:rgba(139,92,246,.07); }
+    .name { font-weight:700; } .desc { color:var(--muted); max-width:230px; }
+    .badge { background:rgba(139,92,246,.16); color:#c4b5fd; border:1px solid rgba(139,92,246,.4); padding:3px 11px; border-radius:20px; font-size:12px; font-weight:600; white-space:nowrap; }
+    .stock { background:rgba(34,211,238,.13); color:#67e8f9; padding:3px 11px; border-radius:20px; font-weight:700; font-size:12px; }
+    .stock.low { background:rgba(251,113,133,.15); color:#fda4af; }
+    .actions { white-space:nowrap; }
+    .btn-sm { border:1px solid transparent; padding:6px 13px; border-radius:9px; cursor:pointer; font-size:13px; font-weight:600; margin-right:4px; transition:.15s; }
+    .btn-sm.edit { background:rgba(34,211,238,.12); color:#67e8f9; border-color:rgba(34,211,238,.3); }
+    .btn-sm.del { background:rgba(251,113,133,.12); color:#fda4af; border-color:rgba(251,113,133,.3); }
+    .btn-sm:hover { transform:translateY(-1px); filter:brightness(1.25); }
+    .empty { text-align:center; color:var(--muted); padding:34px; }
+    footer { text-align:center; color:#6d6796; font-size:12px; padding:26px 0 24px; }
+
+    .toast { position:fixed; bottom:24px; right:24px; padding:13px 22px; border-radius:12px; color:#fff; font-weight:600; background:#059669;
+      box-shadow:0 10px 30px rgba(0,0,0,.5); transform:translateY(100px); opacity:0; transition:.3s; z-index:99; }
+    .toast.error { background:#e11d48; } .toast.show { transform:none; opacity:1; }
+
+    @media (max-width:900px) {
+      .shell { grid-template-columns:1fr; }
+      .sidebar { position:static; height:auto; flex-direction:row; align-items:center; justify-content:space-between; padding:12px 16px; border-right:0; border-bottom:1px solid var(--line); }
+      .side-brand { border:0; margin:0; padding:0; } nav, .me { display:none; }
+      .content { padding:20px 14px 10px; }
+      .layout, .stats { grid-template-columns:1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- LOGO: drawn once, reused everywhere -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#22d3ee"/><stop offset=".55" stop-color="#8b5cf6"/><stop offset="1" stop-color="#ec4899"/>
+      </linearGradient>
+      <radialGradient id="core" cx=".5" cy=".4" r=".7">
+        <stop offset="0" stop-color="#2d1860"/><stop offset="1" stop-color="#0a0616"/>
+      </radialGradient>
+      <symbol id="logo" viewBox="0 0 120 120">
+        <circle cx="60" cy="60" r="57" fill="none" stroke="url(#g1)" stroke-width="1.2" opacity=".45"/>
+        <g>
+          <animateTransform attributeName="transform" type="rotate" from="0 60 60" to="360 60 60" dur="24s" repeatCount="indefinite"/>
+          <circle cx="60" cy="60" r="50" fill="none" stroke="url(#g1)" stroke-width="3" stroke-dasharray="3 9" stroke-linecap="round"/>
+          <circle cx="60" cy="10" r="4.5" fill="#22d3ee"/>
+          <circle cx="60" cy="110" r="3.5" fill="#ec4899"/>
+        </g>
+        <circle cx="60" cy="60" r="40" fill="url(#core)" stroke="url(#g1)" stroke-width="2.5"/>
+        <polygon points="33,40 48,40 60,68 72,40 87,40 60,90" fill="url(#g1)"/>
+        <path d="M60 20l2.4 6.2L68.6 28.6l-6.2 2.4L60 37.2l-2.4-6.2L51.4 28.6l6.2-2.4z" fill="#fde68a"/>
+      </symbol>
+    </defs>
+  </svg>
+
+  <!-- ================= LOGIN ================= -->
+  <div id="loginScreen" class="login">
+    <div class="aurora a"></div><div class="aurora b"></div><div class="aurora c"></div>
+    <div class="float" style="top:12%;left:9%">📱</div>
+    <div class="float" style="top:68%;left:7%;animation-delay:-2s">💻</div>
+    <div class="float" style="top:20%;right:10%;animation-delay:-4s">🎧</div>
+    <div class="float" style="top:74%;right:12%;animation-delay:-6s">⌚</div>
+    <div class="float" style="top:44%;left:20%;animation-delay:-3s">🎮</div>
+    <div class="float" style="top:8%;right:32%;animation-delay:-5s">🔋</div>
+
+    <form id="loginForm" class="login-card">
+      <div class="emblem"><svg class="logo-svg"><use href="#logo"/></svg></div>
+      <h1 class="wordmark gtext">VOLTA</h1>
+      <p class="tagline">TECH PRODUCT SHOWCASE</p>
+
+      <div class="field"><span class="fi">👤</span>
+        <input id="username" placeholder="Username" autocomplete="off" required></div>
+      <div class="field pw"><span class="fi">🔒</span>
+        <input id="password" type="password" placeholder="Password" required>
+        <button type="button" class="eye" title="Show / hide"
+          onclick="const p=document.getElementById('password');p.type=p.type==='password'?'text':'password'">👁</button></div>
+
+      <div class="error" id="loginError"></div>
+      <button type="submit" class="btn primary">Sign In ⚡</button>
+      <div class="hint">Demo access · <b>admin</b> / <b>admin123</b></div>
+      <div class="uni">MULUNGUSHI UNIVERSITY · ICT251</div>
+    </form>
+  </div>
+
+  <!-- ================= DASHBOARD ================= -->
+  <div id="app" class="shell hidden">
+    <aside class="sidebar">
+      <div class="side-brand">
+        <svg class="logo-svg"><use href="#logo"/></svg>
+        <div><b class="gtext">VOLTA</b><small>Tech Showcase</small></div>
+      </div>
+      <nav>
+        <a href="#overview" class="active">📊&nbsp; Overview</a>
+        <a href="#addEdit">➕&nbsp; Add / Edit</a>
+        <a href="#catalogue">📦&nbsp; Catalogue</a>
+      </nav>
+      <div class="side-foot">
+        <div class="me"><div class="avatar">A</div><div><b>admin</b><small>Administrator</small></div></div>
+        <button class="logout" id="logoutBtn">Logout</button>
+      </div>
+    </aside>
+
+    <div class="content">
+      <header class="page-head" id="overview">
+        <div><h2 id="greet">Dashboard</h2><p id="today"></p></div>
+        <span class="live" id="live">● Checking API…</span>
+      </header>
+
+      <section class="stats">
+        <div class="stat"><div class="ico">📦</div><div><span>Total Products</span><b id="statCount">0</b></div></div>
+        <div class="stat"><div class="ico">🔋</div><div><span>Units In Stock</span><b id="statStock">0</b></div></div>
+        <div class="stat"><div class="ico">💎</div><div><span>Inventory Value</span><b id="statValue">$0.00</b></div></div>
+      </section>
+
+      <section class="layout">
+        <div class="card" id="addEdit">
+          <h3 id="formTitle">Add New Product</h3>
+          <form id="productForm">
+            <input type="hidden" id="id">
+            <label>Product name *</label><input id="product_name" placeholder="e.g. iPhone 15" required>
+            <label>Brand</label><input id="brand" placeholder="e.g. Apple">
+            <label>Category</label><input id="category" placeholder="e.g. Smartphone">
+            <label>Price ($)</label><input id="price" type="number" step="0.01" min="0" placeholder="0.00">
+            <label>Stock quantity</label><input id="stock_quantity" type="number" min="0" placeholder="0">
+            <label>Description</label><textarea id="description" placeholder="Short description"></textarea>
+            <button type="submit" id="saveBtn" class="btn primary">Add Product</button>
+            <button type="button" id="cancelBtn" class="btn ghost hidden">Cancel Edit</button>
+          </form>
+        </div>
+
+        <div class="card" id="catalogue">
+          <h3>Product Catalogue</h3>
+          <div class="toolbar">
+            <input id="search" placeholder="🔍 Search products...">
+            <select id="categoryFilter"><option value="">All categories</option></select>
+          </div>
+          <div class="count" id="resultCount"></div>
+          <div class="wrap">
+            <table>
+              <thead>
+                <tr><th>ID</th><th>Name</th><th>Brand</th><th>Category</th><th>Price</th><th>Stock</th><th>Description</th><th>Actions</th></tr>
+              </thead>
+              <tbody id="tableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+      <footer>© 2026 Volta · Built for ICT251, Mulungushi University</footer>
+    </div>
+  </div>
+
+  <div id="toast" class="toast"></div>
+
+  <script>
+    (function () {
+      var h = new Date().getHours();
+      var g = h < 12 ? 'Good morning' : h < 18 ? 'Good afternoon' : 'Good evening';
+      document.getElementById('greet').textContent = g + ', admin 👋';
+      document.getElementById('today').textContent =
+        new Date().toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+      var live = document.getElementById('live');
+      fetch('/api/products')
+        .then(function (r) { if (!r.ok) throw 0; live.textContent = '● API online'; })
+        .catch(function () { live.textContent = '● API offline'; live.classList.add('off'); });
+      document.querySelectorAll('nav a').forEach(function (a) {
+        a.addEventListener('click', function () {
+          document.querySelectorAll('nav a').forEach(function (x) { x.classList.remove('active'); });
+          a.classList.add('active');
+        });
+      });
+    })();
+  </script>
+  <script src="app.js"></script>
+</body>
+</html>
